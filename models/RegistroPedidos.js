@@ -45,7 +45,7 @@ class RegistroPedidos {
 
   async mostrarTodos() {
     const nombreTabla = this.obtenerNombreTabla();
-    console.log(`\n¡Gracias por tu pedido! Todos tus registros guardados en SQL Server [${nombreTabla}]:`);
+    console.log(`\ngracias por tu pedido! todos tus registros guardados en SQL Server [${nombreTabla}]:`);
     const resultado = await sql.query(`SELECT * FROM ${nombreTabla}`);
     resultado.recordset.forEach((r) => {
       console.log(
