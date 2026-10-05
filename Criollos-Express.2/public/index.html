@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Criollos Express</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <header class="marquee">
+    <div class="marquee-inner">
+      <h1>Criollos Express</h1>
+      <p class="tagline">Pollo asado, pedidos al día</p>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn is-active" data-tab="productos">Productos</button>
+    <button class="tab-btn" data-tab="pedidos">Tomar pedido</button>
+    <button class="tab-btn" data-tab="hoy">Pedidos de hoy</button>
+    <button class="tab-btn" data-tab="historial">Historial</button>
+  </nav>
+
+  <main>
+
+    <!-- ===================== PRODUCTOS ===================== -->
+    <section id="tab-productos" class="tab-panel is-active">
+      <div class="panel-head">
+        <h2>Productos</h2>
+        <button id="btn-nuevo-producto" class="btn-primary">+ Nuevo producto</button>
+      </div>
+
+      <div id="form-producto-wrap" class="ticket hidden">
+        <form id="form-producto">
+          <input type="hidden" id="producto-id" />
+          <label>Nombre
+            <input type="text" id="producto-nombre" required maxlength="100" placeholder="Pollo Entero" />
+          </label>
+          <label>Precio (COP)
+            <input type="number" id="producto-precio" required min="0" step="0.01" placeholder="25000" />
+          </label>
+          <label>Stock disponible
+            <input type="number" id="producto-stock" required min="0" step="1" placeholder="20" />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="btn-guardar-producto">Guardar producto</button>
+            <button type="button" class="btn-ghost" id="btn-cancelar-producto">Cancelar</button>
+          </div>
+          <p class="form-error" id="producto-error"></p>
+        </form>
+      </div>
+
+      <div class="lista" id="lista-productos">
+        <p class="vacio">Cargando productos…</p>
+      </div>
+    </section>
+
+    <!-- ===================== TOMAR PEDIDO ===================== -->
+    <section id="tab-pedidos" class="tab-panel">
+      <div class="panel-head">
+        <h2>Tomar pedido</h2>
+      </div>
+
+      <div class="ticket">
+        <form id="form-pedido">
+          <label>Tienda
+            <input type="text" id="pedido-tienda" required placeholder="Sucursal Centro" />
+          </label>
+          <label>Nombre del cliente
+            <input type="text" id="pedido-nombre" required placeholder="Nombre completo" />
+          </label>
+          <label>Dirección de entrega
+            <input type="text" id="pedido-direccion" required placeholder="Calle 10 # 5-20" />
+          </label>
+          <label>Producto
+            <select id="pedido-producto" required></select>
+          </label>
+          <label>Cantidad
+            <input type="number" id="pedido-cantidad" required min="1" step="1" value="1" />
+          </label>
+          <p class="ayuda" id="pedido-disponible"></p>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Registrar pedido</button>
+          </div>
+          <p class="form-error" id="pedido-error"></p>
+          <p class="form-ok" id="pedido-ok"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== PEDIDOS DE HOY ===================== -->
+    <section id="tab-hoy" class="tab-panel">
+      <div class="panel-head">
+        <h2>Pedidos de hoy</h2>
+        <button id="btn-refrescar-hoy" class="btn-ghost">Actualizar</button>
+      </div>
+      <div class="lista" id="lista-pedidos-hoy">
+        <p class="vacio">Cargando pedidos…</p>
+      </div>
+    </section>
+
+    <!-- ===================== HISTORIAL COMPLETO ===================== -->
+    <section id="tab-historial" class="tab-panel">
+      <div class="panel-head">
+        <h2>Historial</h2>
+      </div>
+
+      <div class="ticket">
+        <label>Filtrar por fecha (déjalo vacío para ver todo)
+          <input type="date" id="historial-fecha" />
+        </label>
+        <div class="form-actions">
+          <button id="btn-filtrar-historial" class="btn-primary">Ver</button>
+          <button id="btn-limpiar-historial" class="btn-ghost">Ver todo</button>
+        </div>
+      </div>
+
+      <div class="lista" id="lista-historial">
+        <p class="vacio">Cargando historial…</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 const RegistroPedidos = require('./RegistroPedidos');
 
-
 class RegistroPorDia extends RegistroPedidos {
   obtenerNombreTabla() {
     const hoy = new Date();
