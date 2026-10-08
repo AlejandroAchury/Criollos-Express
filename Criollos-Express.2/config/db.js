@@ -1,11 +1,7 @@
 require('dotenv').config();
 const sql = require('mssql');
 
-// Ya no hay ningún usuario o contraseña personal escrito en el código.
-// Todo sale del archivo .env, que cada quien crea a partir de .env.example.
-// Con el login genérico "criollos_app" (ver sql/setup.sql), cualquier persona
-// que clone el proyecto y ejecute ese script puede conectarse sin tener que
-// crear una cuenta propia en SQL Server.
+
 const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

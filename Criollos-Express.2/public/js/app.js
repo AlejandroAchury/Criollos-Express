@@ -1,4 +1,4 @@
-// ---------- utilidades ----------
+
 function moneda(valor) {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valor);
 }
@@ -19,12 +19,12 @@ async function api(url, opciones = {}) {
   });
   const datos = await respuesta.json().catch(() => ({}));
   if (!respuesta.ok) {
-    throw new Error(datos.error || 'Ocurrió un error inesperado.');
+    throw new Error(datos.error || 'Ocurrio un error inesperado.');
   }
   return datos;
 }
 
-// ---------- tabs ----------
+
 const tabButtons = document.querySelectorAll('.tab-btn');
 const tabPanels = document.querySelectorAll('.tab-panel');
 
@@ -41,9 +41,7 @@ tabButtons.forEach((btn) => {
   });
 });
 
-// ============================================================
-// PRODUCTOS
-// ============================================================
+//productos:
 const listaProductos = document.getElementById('lista-productos');
 const formProductoWrap = document.getElementById('form-producto-wrap');
 const formProducto = document.getElementById('form-producto');
@@ -154,9 +152,7 @@ formProducto.addEventListener('submit', async (evento) => {
   }
 });
 
-// ============================================================
-// TOMAR PEDIDO
-// ============================================================
+//tomar pedido:
 const selectProducto = document.getElementById('pedido-producto');
 const pedidoDisponible = document.getElementById('pedido-disponible');
 const formPedido = document.getElementById('form-pedido');
@@ -204,9 +200,7 @@ formPedido.addEventListener('submit', async (evento) => {
   }
 });
 
-// ============================================================
-// PEDIDOS DE HOY
-// ============================================================
+//pedido de hoy:
 const listaPedidosHoy = document.getElementById('lista-pedidos-hoy');
 document.getElementById('btn-refrescar-hoy').addEventListener('click', cargarPedidosHoy);
 
@@ -220,9 +214,7 @@ async function cargarPedidosHoy() {
   }
 }
 
-// Dibuja una lista de pedidos. Si permiteEliminar es true, muestra el botón
-// de Eliminar (solo tiene sentido para los pedidos de HOY, que son los que
-// se pueden borrar; el historial completo es solo de lectura).
+// dibuja una lista de pedidos el cual se puede eliminar si permiteEliminar es true
 function renderPedidos(contenedor, pedidos, mensajeVacio, permiteEliminar) {
   if (!pedidos.length) {
     contenedor.innerHTML = `<p class="vacio">${mensajeVacio}</p>`;
@@ -271,9 +263,7 @@ function renderPedidos(contenedor, pedidos, mensajeVacio, permiteEliminar) {
   });
 }
 
-// ============================================================
-// HISTORIAL COMPLETO (con filtro opcional por fecha)
-// ============================================================
+//historial completo de pedidos:
 const listaHistorial = document.getElementById('lista-historial');
 const inputFecha = document.getElementById('historial-fecha');
 
@@ -295,5 +285,5 @@ async function cargarHistorial(fecha) {
   }
 }
 
-// ---------- arranque ----------
+// inicializacion:
 cargarProductos();

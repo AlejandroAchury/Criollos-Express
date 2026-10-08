@@ -81,7 +81,7 @@ class RegistroPedidos {
     return resultado.recordset;
   }
 
-  // fecha en formato 'YYYY-MM-DD', igual a como viene de un <input type="date">
+  // esto fcrea fecha en formato YYYY-MM-DD
   async listarPorFecha(fecha) {
     const pool = await getPool();
     const nombreTabla = this.obtenerNombreTabla();

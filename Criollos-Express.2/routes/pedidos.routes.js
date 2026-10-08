@@ -12,18 +12,17 @@ async function asegurarTablas() {
   await registroGeneral.crearTablaSiNoExiste();
 }
 
-// Leer pedidos de hoy
 router.get('/hoy', async (req, res) => {
   try {
     await asegurarTablas();
     const pedidos = await registroDiario.listarTodos();
     res.json(pedidos);
   } catch (error) {
-    res.status(500).json({ error: 'No se pudieron obtener los pedidos de hoy.', detalle: error.message });
-  }
+    res.status(500).json({ error: 'No se pudieron obtener los pedidos de hoy.', detalle: error.message }); // esto lee los que se pedidos que se hicieron hoy
+  } 
 });
 
-// Leer historial completo (opcionalmente filtrado por ?fecha=YYYY-MM-DD)
+
 router.get('/historial', async (req, res) => {
   try {
     await asegurarTablas();
@@ -33,24 +32,24 @@ router.get('/historial', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'No se pudo obtener el historial.', detalle: error.message });
   }
-});
+}); // esto nos ayuda a leer historial completo por filtrado
 
-// Crear un pedido nuevo
+
 router.post('/', async (req, res) => {
   const { tienda, nombre, direccion, id_producto, cantidad } = req.body;
 
   if (!tienda || !nombre || !direccion || !id_producto || !cantidad) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    return res.status(400).json({ error: 'todos los campos son obligatorios.' });
   }
 
   try {
     await asegurarTablas();
 
     const producto = await Producto.obtener(id_producto);
-    if (!producto) return res.status(404).json({ error: 'Ese producto no existe.' });
+    if (!producto) return res.status(404).json({ error: 'ese producto no existe.' });
 
     const cantidadNum = Number(cantidad);
-    if (cantidadNum <= 0) return res.status(400).json({ error: 'La cantidad debe ser mayor a cero.' });
+    if (cantidadNum <= 0) return res.status(400).json({ error: 'la cantidad debe ser mayor a cero.' });
     if (cantidadNum > producto.stock) {
       return res.status(400).json({ error: `No hay suficiente stock. Solo quedan ${producto.stock}.` });
     }
@@ -75,11 +74,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Modificar un pedido del día
-router.put('/:id', async (req, res) => {
+
+router.put('/:id', async (req, res) => { // esto permite modificar un pedido del dia
   const { tienda, nombre, direccion, producto, cantidad, total } = req.body;
   if (!tienda || !nombre || !direccion || !producto || !cantidad || total === undefined) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    return res.status(400).json({ error: 'todos los campos son obligatorios.' });
   }
 
   try {
@@ -98,8 +97,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Eliminar un pedido del día
-router.delete('/:id', async (req, res) => {
+
+router.delete('/:id', async (req, res) => { // esta parte del codigo permite eliminar un pedido del dia, y si no existe nos manda un error 404
   try {
     const eliminado = await registroDiario.eliminar(req.params.id);
     if (!eliminado) return res.status(404).json({ error: 'Pedido no encontrado.' });
