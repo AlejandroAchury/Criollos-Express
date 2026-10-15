@@ -3,6 +3,16 @@ function moneda(valor) {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valor);
 }
 
+function escaparHtml(valor) {
+  return String(valor ?? '').replace(/[&<>"']/g, (caracter) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[caracter]);
+}
+
 function mostrarToast(mensaje, esError = false) {
   const toast = document.getElementById('toast');
   toast.textContent = mensaje;
@@ -18,6 +28,10 @@ async function api(url, opciones = {}) {
     ...opciones
   });
   const datos = await respuesta.json().catch(() => ({}));
+  if (respuesta.status === 401) {
+    window.location.assign('/login');
+    throw new Error('Tu sesión expiró. Inicia sesión nuevamente.');
+  }
   if (!respuesta.ok) {
     throw new Error(datos.error || 'Ocurrio un error inesperado.');
   }
@@ -83,7 +97,7 @@ function renderProductos(productos) {
       return `
         <div class="fila" data-id="${p.id_producto}">
           <div class="fila-info">
-            <h3>${p.nombre}</h3>
+            <h3>${escaparHtml(p.nombre)}</h3>
             <p>${moneda(p.precio)} · <span class="${stockClase}">${p.stock} en stock</span></p>
           </div>
           <div class="fila-acciones">
@@ -164,7 +178,7 @@ let productosCache = [];
 async function cargarSelectProductos() {
   productosCache = await cargarProductos();
   selectProducto.innerHTML = productosCache
-    .map((p) => `<option value="${p.id_producto}">${p.nombre} — ${moneda(p.precio)}</option>`)
+    .map((p) => `<option value="${p.id_producto}">${escaparHtml(p.nombre)} — ${moneda(p.precio)}</option>`)
     .join('');
   actualizarDisponible();
 }
@@ -236,8 +250,8 @@ function renderPedidos(contenedor, pedidos, mensajeVacio, permiteEliminar) {
       return `
         <div class="fila" data-id="${p.id_registro}">
           <div class="fila-info">
-            <h3>${p.cantidad} × ${p.producto}</h3>
-            <p>${p.nombre} · ${p.tienda} · ${moneda(p.valor_total)} · ${fechaHora}</p>
+            <h3>${p.cantidad} × ${escaparHtml(p.producto)}</h3>
+            <p>${escaparHtml(p.nombre)} · ${escaparHtml(p.tienda)} · ${moneda(p.valor_total)} · ${fechaHora}</p>
           </div>
           ${acciones}
         </div>
@@ -285,5 +299,23 @@ async function cargarHistorial(fecha) {
   }
 }
 
-// inicializacion:
-cargarProductos();
+document.getElementById('btn-cerrar-sesion').addEventListener('click', async () => {
+  try {
+    await api('/api/auth/logout', { method: 'POST' });
+    window.location.assign('/login');
+  } catch (error) {
+    mostrarToast(error.message, true);
+  }
+});
+
+async function iniciarAplicacion() {
+  try {
+    const { usuario } = await api('/api/auth/me');
+    document.getElementById('cuenta-actual').textContent = usuario.accountName;
+    await cargarProductos();
+  } catch (error) {
+    if (window.location.pathname !== '/login') mostrarToast(error.message, true);
+  }
+}
+
+iniciarAplicacion();

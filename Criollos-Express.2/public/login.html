@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f0a500" />
+  <title>Acceso | Criollos Express</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <a class="auth-brand" href="/login">Criollos Express</a>
+      <p class="auth-subtitle">Tus pedidos y productos, siempre a la mano.</p>
+
+      <div class="auth-switch" role="tablist" aria-label="Acceso a la cuenta">
+        <button id="tab-login" class="auth-tab is-active" type="button" role="tab" aria-selected="true">Iniciar sesión</button>
+        <button id="tab-register" class="auth-tab" type="button" role="tab" aria-selected="false">Crear cuenta</button>
+      </div>
+
+      <h1 id="auth-title">Bienvenido de nuevo</h1>
+      <p id="auth-description" class="auth-description">Ingresa con el correo y la contraseña de tu cuenta.</p>
+
+      <form id="form-login" class="auth-form">
+        <label>Correo electrónico
+          <input name="correo" type="email" autocomplete="email" required maxlength="254" />
+        </label>
+        <label>Contraseña
+          <input name="contrasena" type="password" autocomplete="current-password" required maxlength="72" />
+        </label>
+        <button class="btn-primary auth-submit" type="submit">Iniciar sesión</button>
+      </form>
+
+      <form id="form-register" class="auth-form hidden">
+        <label>Nombre del negocio
+          <input name="nombre" type="text" autocomplete="organization" required maxlength="100" />
+        </label>
+        <label>Correo electrónico
+          <input name="correo" type="email" autocomplete="email" required maxlength="254" />
+        </label>
+        <label>Contraseña
+          <input name="contrasena" type="password" autocomplete="new-password" required minlength="12" maxlength="72" />
+        </label>
+        <p class="auth-hint">Usa al menos 12 caracteres. Tu cuenta tendrá sus propios productos y pedidos.</p>
+        <button class="btn-primary auth-submit" type="submit">Crear cuenta</button>
+      </form>
+
+      <p id="auth-error" class="form-error auth-message" role="alert" aria-live="polite"></p>
+      <p id="auth-success" class="form-ok auth-message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

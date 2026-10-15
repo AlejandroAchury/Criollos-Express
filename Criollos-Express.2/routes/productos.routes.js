@@ -4,7 +4,7 @@ const Producto = require('../models/Producto');
 const router = express.Router();
 
 function validarDatos(body) {
-  const { nombre, precio, stock } = body;
+  const { nombre, precio, stock } = body || {};
   if (!nombre || typeof nombre !== 'string') return 'El nombre es obligatorio.';
   if (precio === undefined || isNaN(Number(precio)) || Number(precio) < 0) return 'El precio debe ser un número válido.';
   if (stock === undefined || isNaN(Number(stock)) || Number(stock) < 0) return 'El stock debe ser un número válido.';
@@ -14,10 +14,11 @@ function validarDatos(body) {
 
 router.get('/', async (req, res) => {
   try {
-    const productos = await Producto.listar();
+    const productos = await Producto.listar(req.usuario.accountId);
     res.json(productos);
   } catch (error) {
-    res.status(500).json({ error: 'no se pudieron obtener los productos.', detalle: error.message });
+    console.error('No se pudieron obtener los productos:', error.message);
+    res.status(500).json({ error: 'No se pudieron obtener los productos.' });
   }
 });
 
@@ -27,11 +28,15 @@ router.post('/', async (req, res) => { //esto crea
   if (error) return res.status(400).json({ error });
 
   try {
-    const { nombre, precio, stock } = req.body;
-    const producto = await Producto.crear({ nombre, precio: Number(precio), stock: Number(stock) });
+    const { nombre, precio, stock } = req.body || {};
+    const producto = await Producto.crear(
+      { nombre, precio: Number(precio), stock: Number(stock) },
+      req.usuario.accountId
+    );
     res.status(201).json(producto);
   } catch (error) {
-    res.status(500).json({ error: 'no se pudo crear el producto.', detalle: error.message });
+    console.error('No se pudo crear el producto:', error.message);
+    res.status(500).json({ error: 'No se pudo crear el producto.' });
   }
 });
 
@@ -41,29 +46,31 @@ router.put('/:id', async (req, res) => { //esto modifica
   if (error) return res.status(400).json({ error });
 
   try {
-    const existente = await Producto.obtener(req.params.id);
+    const existente = await Producto.obtener(req.params.id, req.usuario.accountId);
     if (!existente) return res.status(404).json({ error: 'producto no encontrado.' });
 
-    const { nombre, precio, stock } = req.body;
+    const { nombre, precio, stock } = req.body || {};
     const producto = await Producto.actualizar(req.params.id, {
       nombre,
       precio: Number(precio),
       stock: Number(stock)
-    });
+    }, req.usuario.accountId);
     res.json(producto);
   } catch (error) {
-    res.status(500).json({ error: 'no se pudo actualizar el producto.', detalle: error.message });
+    console.error('No se pudo actualizar el producto:', error.message);
+    res.status(500).json({ error: 'No se pudo actualizar el producto.' });
   }
 });
 
 
 router.delete('/:id', async (req, res) => { //esto elimina
   try {
-    const eliminado = await Producto.eliminar(req.params.id);
+    const eliminado = await Producto.eliminar(req.params.id, req.usuario.accountId);
     if (!eliminado) return res.status(404).json({ error: 'producto no encontrado.' });
     res.json(eliminado);
   } catch (error) {
-    res.status(500).json({ error: 'no se pudo eliminar el producto.', detalle: error.message });
+    console.error('No se pudo eliminar el producto:', error.message);
+    res.status(500).json({ error: 'No se pudo eliminar el producto.' });
   }
 });
 
